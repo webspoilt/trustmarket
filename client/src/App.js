@@ -15,6 +15,19 @@ import Layout from './components/layout/Layout';
 import MobileLayout from './components/layout/MobileLayout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 
+// Lazy-loaded page components
+const Home = React.lazy(() => import('./pages/Home'));
+const Login = React.lazy(() => import('./pages/auth/Login'));
+const Register = React.lazy(() => import('./pages/auth/Register'));
+const CreateListing = React.lazy(() => import('./pages/CreateListing'));
+const ListingDetails = React.lazy(() => import('./pages/ListingDetails'));
+const SearchResults = React.lazy(() => import('./pages/SearchResults'));
+const Messages = React.lazy(() => import('./pages/Messages'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Premium = React.lazy(() => import('./pages/Premium'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+
 // Enhanced Loading Component with skeleton
 const LoadingFallback = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -380,18 +393,5 @@ function App() {
     </HelmetProvider>
   );
 }
-
-// Lazy-loaded page components with named exports for better tree shaking
-const Home = React.lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
-const Login = React.lazy(() => import('./pages/auth/Login').then(module => ({ default: module.Login })));
-const Register = React.lazy(() => import('./pages/auth/Register').then(module => ({ default: module.Register })));
-const CreateListing = React.lazy(() => import('./pages/CreateListing').then(module => ({ default: module.CreateListing })));
-const ListingDetails = React.lazy(() => import('./pages/ListingDetails').then(module => ({ default: module.ListingDetails })));
-const SearchResults = React.lazy(() => import('./pages/SearchResults').then(module => ({ default: module.SearchResults })));
-const Messages = React.lazy(() => import('./pages/Messages').then(module => ({ default: module.Messages })));
-const Profile = React.lazy(() => import('./pages/Profile').then(module => ({ default: module.Profile })));
-const Dashboard = React.lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
-const Premium = React.lazy(() => import('./pages/Premium').then(module => ({ default: module.Premium })));
-const NotFound = React.lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
 
 export default App;
