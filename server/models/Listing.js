@@ -68,7 +68,7 @@ const locationSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^\d{6}$/.test(v);
       },
       message: 'Please enter a valid 6-digit pincode'
@@ -227,7 +227,7 @@ const listingSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
-      'electronics', 'vehicles', 'furniture', 'books', 'clothing', 
+      'electronics', 'vehicles', 'furniture', 'books', 'clothing',
       'services', 'jobs', 'real_estate', 'other'
     ]
   },
@@ -302,7 +302,7 @@ const listingSchema = new mongoose.Schema({
   },
   expiryDate: {
     type: Date,
-    default: function() {
+    default: function () {
       // Auto-expire after 30 days
       return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
     }
@@ -391,10 +391,10 @@ listingSchema.index({ createdAt: -1 });
 // Text search index
 listingSchema.index({ title: 'text', description: 'text', tags: 'text' });
 // Geospatial index for location-based search
-listingSchema.index({ 'location.coordinates': '2dsphere' });
+// Note: 2dsphere index requires GeoJSON format {type: "Point", coordinates: [lng, lat]}\n// Current schema uses {latitude, longitude} which works with Haversine formula in calculateDistance()\n// listingSchema.index({ 'location.coordinates': '2dsphere' });
 
 // Virtual for days since posting
-listingSchema.virtual('daysSincePosted').get(function() {
+listingSchema.virtual('daysSincePosted').get(function () {
   const now = new Date();
   const created = new Date(this.createdAt);
   const diffTime = Math.abs(now - created);
@@ -403,17 +403,17 @@ listingSchema.virtual('daysSincePosted').get(function() {
 });
 
 // Virtual for is expired
-listingSchema.virtual('isExpired').get(function() {
+listingSchema.virtual('isExpired').get(function () {
   return new Date() > this.expiryDate;
 });
 
 // Virtual for distance (if coordinates provided)
-listingSchema.virtual('distance').get(function() {
+listingSchema.virtual('distance').get(function () {
   return this._distance || null;
 });
 
 // Pre-save middleware to update status if expired
-listingSchema.pre('save', function(next) {
+listingSchema.pre('save', function (next) {
   if (this.isExpired && this.status === 'active') {
     this.status = 'expired';
   }
@@ -421,15 +421,15 @@ listingSchema.pre('save', function(next) {
 });
 
 // Static methods
-listingSchema.statics.findActive = function() {
+listingSchema.statics.findActive = function () {
   return this.find({ status: 'active' }).sort({ createdAt: -1 });
 };
 
-listingSchema.statics.findByCategory = function(category) {
+listingSchema.statics.findByCategory = function (category) {
   return this.find({ category, status: 'active' }).sort({ trustScore: -1, createdAt: -1 });
 };
 
-listingSchema.statics.findByLocation = function(latitude, longitude, maxDistance = 50000) { // 50km default
+listingSchema.statics.findByLocation = function (latitude, longitude, maxDistance = 50000) { // 50km default
   return this.find({
     status: 'active',
     'location.coordinates': {
@@ -444,12 +444,12 @@ listingSchema.statics.findByLocation = function(latitude, longitude, maxDistance
   });
 };
 
-listingSchema.statics.search = function(query, filters = {}) {
+listingSchema.statics.search = function (query, filters = {}) {
   const searchQuery = {
     status: 'active',
     $text: { $search: query }
   };
-  
+
   // Add filters
   if (filters.category) searchQuery.category = filters.category;
   if (filters.minPrice || filters.maxPrice) {
@@ -460,69 +460,69 @@ listingSchema.statics.search = function(query, filters = {}) {
   if (filters.condition) searchQuery.condition = filters.condition;
   if (filters.sellerType) searchQuery['listingType.sellerType'] = filters.sellerType;
   if (filters.minTrustScore) searchQuery.trustScore = { $gte: filters.minTrustScore };
-  
+
   return this.find(searchQuery).sort({ score: { $meta: 'textScore' } });
 };
 
 // Instance methods
-listingSchema.methods.incrementViews = function() {
+listingSchema.methods.incrementViews = function () {
   this.views += 1;
-  
+
   // Update daily analytics
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const todayAnalytics = this.analytics.viewsByDate.find(
     item => item.date.getTime() === today.getTime()
   );
-  
+
   if (todayAnalytics) {
     todayAnalytics.count += 1;
   } else {
     this.analytics.viewsByDate.push({ date: today, count: 1 });
   }
-  
+
   return this.save();
 };
 
-listingSchema.methods.incrementInquiries = function() {
+listingSchema.methods.incrementInquiries = function () {
   this.inquiries += 1;
-  
+
   // Update daily analytics
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const todayAnalytics = this.analytics.inquiriesByDate.find(
     item => item.date.getTime() === today.getTime()
   );
-  
+
   if (todayAnalytics) {
     todayAnalytics.count += 1;
   } else {
     this.analytics.inquiriesByDate.push({ date: today, count: 1 });
   }
-  
+
   return this.save();
 };
 
-listingSchema.methods.updateTrustScore = async function() {
+listingSchema.methods.updateTrustScore = async function () {
   // Calculate trust score based on seller trust and listing quality
   const seller = await mongoose.model('User').findById(this.seller);
   if (!seller) return this;
-  
+
   const sellerTrust = seller.trustScore.total;
   const viewToInquiryRatio = this.views > 0 ? (this.inquiries / this.views) * 100 : 0;
-  
+
   // Base score from seller trust (70% weight)
   let trustScore = sellerTrust * 0.7;
-  
+
   // Listing quality factors (30% weight)
   const hasVideo = this.media.video ? 20 : 0;
   const hasImages = Math.min(this.media.images.length * 5, 15); // Max 15 points for images
   const inquiryRate = Math.min(viewToInquiryRatio * 2, 15); // Max 15 points for high inquiry rate
-  
+
   trustScore += (hasVideo + hasImages + inquiryRate) * 0.3;
-  
+
   this.trustScore = Math.max(0, Math.min(100, Math.round(trustScore)));
   return this.save();
 };

@@ -56,13 +56,13 @@ class VideoVerificationService {
    * @param {string} videoUrl - URL of the video
    * @returns {Object} Verification result
    */
-  static async verifyProduct展示(videoUrl) {
+  static async verifyProductDisplay(videoUrl) {
     // Placeholder for actual video analysis
     // In production, integrate with:
     // - AWS Rekognition
     // - Google Cloud Video Intelligence
     // - Custom ML models
-    
+
     return {
       isAuthentic: true,
       confidence: 85,
@@ -79,7 +79,7 @@ class VideoVerificationService {
     // Placeholder for stock photo/fake detection
     // In production, use reverse image search APIs
     // and metadata analysis
-    
+
     return {
       isStock: false,
       isFake: false,
@@ -151,7 +151,7 @@ class IDVerificationService {
   static async verifyAadhaar(aadhaarNumber, otp) {
     // In production, integrate with UIDAI API
     // For demo, simulate verification
-    
+
     if (aadhaarNumber && otp) {
       return {
         isVerified: true,
@@ -159,7 +159,7 @@ class IDVerificationService {
         timestamp: new Date()
       };
     }
-    
+
     return {
       isVerified: false,
       error: 'Invalid Aadhaar number or OTP'
@@ -174,7 +174,7 @@ class IDVerificationService {
   static async verifyPAN(panNumber) {
     // PAN format: ABCDE1234F
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-    
+
     if (panRegex.test(panNumber)) {
       return {
         isValid: true,
@@ -182,7 +182,7 @@ class IDVerificationService {
         timestamp: new Date()
       };
     }
-    
+
     return {
       isValid: false,
       error: 'Invalid PAN format'
@@ -410,8 +410,8 @@ class FraudDetectionService {
    */
   static isValidPhoneNumber(phone) {
     // Indian phone number validation
-    const indianPhoneRegex = /^[6-9]\\d{9}$/;
-    return indianPhoneRegex.test(phone.replace(/\\s/g, ''));
+    const indianPhoneRegex = /^[6-9]\d{9}$/;
+    return indianPhoneRegex.test(phone.replace(/\s/g, ''));
   }
 
   /**

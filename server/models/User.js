@@ -182,7 +182,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^[6-9]\d{9}$/.test(v);
       },
       message: 'Please enter a valid Indian mobile number'
@@ -230,6 +230,10 @@ const userSchema = new mongoose.Schema({
   banReason: {
     type: String,
     default: ''
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
   },
   lastLogin: {
     type: Date,
@@ -294,7 +298,7 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true,
   toJSON: {
-    transform: function(doc, ret) {
+    transform: function (doc, ret) {
       delete ret.password;
       delete ret.refreshTokens;
       delete ret.__v;
@@ -312,12 +316,12 @@ userSchema.index({ 'verification.phone.verified': 1 });
 userSchema.index({ 'verification.id.verified': 1 });
 
 // Virtual for full name
-userSchema.virtual('fullName').get(function() {
+userSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
 // Virtual for account age in months
-userSchema.virtual('accountAgeMonths').get(function() {
+userSchema.virtual('accountAgeMonths').get(function () {
   const now = new Date();
   const created = new Date(this.createdAt);
   const diffTime = Math.abs(now - created);
@@ -326,9 +330,9 @@ userSchema.virtual('accountAgeMonths').get(function() {
 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
+
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
@@ -339,35 +343,35 @@ userSchema.pre('save', async function(next) {
 });
 
 // Calculate trust score before saving
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   const factors = this.trustScore.factors;
-  
+
   // Account age factor (max 10 points)
   const ageFactor = Math.min(this.accountAgeMonths * 0.5, 10);
-  
+
   // Successful deals factor (max 15 points)
   const dealsFactor = Math.min(factors.successfulDeals * 2, 15);
-  
+
   // Response time factor (max 10 points)
   const responseFactor = factors.responseTime === 0 ? 10 : Math.max(0, 10 - (factors.responseTime / 4));
-  
+
   // Community help factor (max 10 points)
   const helpFactor = Math.min(factors.communityHelp * 1, 10);
-  
+
   // Verification factor (max 20 points)
   const verificationFactor = factors.verification;
-  
+
   // Transaction volume factor (max 15 points)
   const volumeFactor = Math.min(Math.log(factors.transactionVolume / 1000 + 1) * 5, 15);
-  
+
   // Reports penalty (max -20 points)
   const reportsPenalty = Math.min(factors.reports * 2, 20);
-  
-  const totalScore = ageFactor + dealsFactor + responseFactor + helpFactor + 
-                     verificationFactor + volumeFactor - reportsPenalty;
-  
+
+  const totalScore = ageFactor + dealsFactor + responseFactor + helpFactor +
+    verificationFactor + volumeFactor - reportsPenalty;
+
   this.trustScore.total = Math.max(0, Math.min(100, Math.round(totalScore)));
-  
+
   // Determine trust level
   if (this.trustScore.total >= 80) {
     this.trustScore.level = 'elite';
@@ -378,32 +382,32 @@ userSchema.pre('save', function(next) {
   } else {
     this.trustScore.level = 'newbie';
   }
-  
+
   this.trustScore.lastUpdated = new Date();
   next();
 });
 
 // Instance methods
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-userSchema.methods.updateTrustScore = function(factor, value) {
+userSchema.methods.updateTrustScore = function (factor, value) {
   this.trustScore.factors[factor] = value;
   return this.save();
 };
 
-userSchema.methods.addTrustPoints = function(factor, points) {
+userSchema.methods.addTrustPoints = function (factor, points) {
   this.trustScore.factors[factor] = (this.trustScore.factors[factor] || 0) + points;
   return this.save();
 };
 
 // Static methods
-userSchema.statics.findByTrustLevel = function(level) {
+userSchema.statics.findByTrustLevel = function (level) {
   return this.find({ 'trustScore.level': level });
 };
 
-userSchema.statics.findVerified = function() {
+userSchema.statics.findVerified = function () {
   return this.find({
     $or: [
       { 'verification.phone.verified': true },

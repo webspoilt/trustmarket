@@ -11,7 +11,11 @@ const router = express.Router();
 // @access  Public
 router.post('/register', [
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('password')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password must contain uppercase, lowercase, and number'),
   body('phone').isMobilePhone('en-IN').withMessage('Valid Indian phone number is required'),
   body('firstName').trim().isLength({ min: 2, max: 50 }).withMessage('First name must be 2-50 characters'),
   body('lastName').trim().isLength({ min: 2, max: 50 }).withMessage('Last name must be 2-50 characters')
@@ -127,14 +131,14 @@ router.post('/login', [
   if (!isPasswordValid) {
     // Increment login attempts
     user.loginAttempts += 1;
-    
+
     // Lock account after 5 failed attempts
     if (user.loginAttempts >= 5) {
       user.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // Lock for 15 minutes
     }
-    
+
     await user.save();
-    
+
     return res.status(401).json({
       success: false,
       error: 'Invalid credentials'
@@ -145,11 +149,11 @@ router.post('/login', [
   user.loginAttempts = 0;
   user.lockUntil = null;
   user.lastLogin = new Date();
-  
+
   // Generate tokens and store refresh token
   const tokens = generateTokens(user._id);
   user.refreshTokens.push({ token: tokens.refreshToken });
-  
+
   await user.save();
 
   res.json({
@@ -167,12 +171,12 @@ router.post('/login', [
 // @access  Public
 router.post('/refresh', refreshAccessToken, asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = generateTokens(req.user._id);
-  
+
   // Remove old refresh token
   req.user.refreshTokens = req.user.refreshTokens.filter(
     rt => rt.token !== req.refreshToken
   );
-  
+
   // Add new refresh token
   req.user.refreshTokens.push({ token: refreshToken });
   await req.user.save();
@@ -192,7 +196,7 @@ router.post('/refresh', refreshAccessToken, asyncHandler(async (req, res) => {
 // @access  Private
 router.post('/logout', authenticateToken, asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
-  
+
   if (refreshToken) {
     // Remove specific refresh token
     req.user.refreshTokens = req.user.refreshTokens.filter(
@@ -274,10 +278,10 @@ router.post('/verify-phone', [
   }
 
   const { otp } = req.body;
-  
+
   // Get stored OTP for this user
   const storedData = otpStore.get(`phone_${req.user._id}`);
-  
+
   if (!storedData) {
     return res.status(400).json({
       success: false,
@@ -332,16 +336,16 @@ router.post('/resend-otp', authenticateToken, asyncHandler(async (req, res) => {
   // Generate new OTP
   const newOTP = generateOTP();
   const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
-  
+
   // Store OTP (in production, use Redis or database with proper indexing)
   otpStore.set(`phone_${req.user._id}`, {
     otp: newOTP,
     expiresAt
   });
-  
+
   // In a real implementation, you would send OTP via SMS service
   // For demo purposes, we'll just return success with OTP (remove in production)
-  
+
   res.json({
     success: true,
     message: 'OTP sent successfully',
@@ -366,7 +370,7 @@ router.post('/forgot-password', [
   }
 
   const { email } = req.body;
-  
+
   const user = await User.findOne({ email });
   if (!user) {
     // Don't reveal whether email exists or not
@@ -380,19 +384,19 @@ router.post('/forgot-password', [
   const crypto = require('crypto');
   const resetToken = crypto.randomBytes(32).toString('hex');
   const resetExpires = Date.now() + 60 * 60 * 1000; // 1 hour expiration
-  
+
   // Store reset token and expiration in user document
   user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.resetPasswordExpires = resetExpires;
   await user.save();
-  
+
   // In production, you would send email with reset link containing the token
   // For demo purposes, we'll return the hashed token for verification
-  
+
   res.json({
     success: true,
     message: 'If the email exists, a password reset link has been sent',
-    ...(process.env.NODE_ENV === 'development' && { 
+    ...(process.env.NODE_ENV === 'development' && {
       resetToken,
       resetExpires,
       hashedToken: user.resetPasswordToken
@@ -405,7 +409,11 @@ router.post('/forgot-password', [
 // @access  Public
 router.post('/reset-password', [
   body('token').notEmpty().withMessage('Reset token is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+  body('password')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password must contain uppercase, lowercase, and number')
 ], asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -417,31 +425,31 @@ router.post('/reset-password', [
   }
 
   const { token, password } = req.body;
-  
+
   // Hash the token and find user
   const crypto = require('crypto');
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-  
+
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
     resetPasswordExpires: { $gt: Date.now() }
   });
-  
+
   if (!user) {
     return res.status(400).json({
       success: false,
       error: 'Invalid or expired reset token'
     });
   }
-  
+
   // Update password and clear reset tokens
   user.password = password;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpires = undefined;
   user.refreshTokens = []; // Invalidate all sessions
-  
+
   await user.save();
-  
+
   res.json({
     success: true,
     message: 'Password reset successfully. Please login with your new password.'

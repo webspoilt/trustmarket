@@ -59,7 +59,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: file.fieldname === 'video' ? 3 * 1024 * 1024 : 1024 * 1024, // 3MB for video, 1MB for images
+    fileSize: 3 * 1024 * 1024, // 3MB max (videos are larger, images will be well under this)
     files: 10 // Maximum 10 files
   }
 });
@@ -88,7 +88,7 @@ const processUploads = async (req, res, next) => {
     // Process video if uploaded
     if (req.files.video) {
       const videoFile = req.files.video[0];
-      
+
       // Validate video duration (basic check)
       if (videoFile.size === 0) {
         return res.status(400).json({
@@ -107,10 +107,10 @@ const processUploads = async (req, res, next) => {
             { width: 1280, height: 720, crop: 'limit' }
           ]
         });
-        
+
         // Generate thumbnail
         const thumbnailUrl = await generateVideoThumbnail(result.url);
-        
+
         uploadPromises.push(Promise.resolve({
           type: 'video',
           url: result.url,
@@ -155,7 +155,7 @@ const processUploads = async (req, res, next) => {
       // Both video and images
       const videoResult = results.find(r => r.type === 'video');
       const imageResults = results.filter(r => !r.type);
-      
+
       req.uploadedMedia = {
         video: videoResult,
         images: imageResults
@@ -195,7 +195,7 @@ const handleUploadError = (error, req, res, next) => {
         maxSize: req.files?.video ? '3MB for videos, 1MB for images' : '1MB for images'
       });
     }
-    
+
     if (error.code === 'LIMIT_FILE_COUNT') {
       return res.status(400).json({
         success: false,
@@ -203,7 +203,7 @@ const handleUploadError = (error, req, res, next) => {
         maxFiles: 10
       });
     }
-    
+
     if (error.code === 'LIMIT_UNEXPECTED_FILE') {
       return res.status(400).json({
         success: false,

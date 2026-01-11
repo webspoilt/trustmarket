@@ -8,6 +8,60 @@ const { uploadVideo, uploadImages, uploadMedia, processUploads, handleUploadErro
 
 const router = express.Router();
 
+// IMPORTANT: Static routes must be defined BEFORE dynamic routes like /:id
+// Otherwise Express will treat 'categories' and 'search' as listing IDs
+
+// @route   GET /api/listings/categories
+// @desc    Get all categories
+// @access  Public
+router.get('/categories', asyncHandler(async (req, res) => {
+  const categories = [
+    { id: 'electronics', name: 'Electronics', icon: 'smartphone' },
+    { id: 'vehicles', name: 'Vehicles', icon: 'car' },
+    { id: 'furniture', name: 'Furniture', icon: 'chair' },
+    { id: 'books', name: 'Books', icon: 'book' },
+    { id: 'clothing', name: 'Clothing', icon: 'shirt' },
+    { id: 'services', name: 'Services', icon: 'briefcase' },
+    { id: 'jobs', name: 'Jobs', icon: 'user-tie' },
+    { id: 'real_estate', name: 'Real Estate', icon: 'home' },
+    { id: 'other', name: 'Other', icon: 'more-horizontal' }
+  ];
+
+  res.json({
+    success: true,
+    data: {
+      categories
+    }
+  });
+}));
+
+// @route   GET /api/listings/search/suggestions
+// @desc    Get search suggestions
+// @access  Public
+router.get('/search/suggestions', asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.length < 2) {
+    return res.json({
+      success: true,
+      data: { suggestions: [] }
+    });
+  }
+
+  // Get popular search terms and categories
+  const suggestions = [
+    'iPhone', 'Samsung', 'Laptop', 'Bike', 'Car', 'Furniture', 'Books', 'Clothing',
+    'Electronics', 'Vehicles', 'Real Estate', 'Services', 'Jobs'
+  ].filter(item => item.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
+
+  res.json({
+    success: true,
+    data: {
+      suggestions
+    }
+  });
+}));
+
 // @route   GET /api/listings
 // @desc    Get all listings with filtering and pagination
 // @access  Public
@@ -447,56 +501,7 @@ router.post('/:id/report', [
   });
 }));
 
-// @route   GET /api/listings/categories
-// @desc    Get all categories
-// @access  Public
-router.get('/categories', asyncHandler(async (req, res) => {
-  const categories = [
-    { id: 'electronics', name: 'Electronics', icon: 'smartphone' },
-    { id: 'vehicles', name: 'Vehicles', icon: 'car' },
-    { id: 'furniture', name: 'Furniture', icon: 'chair' },
-    { id: 'books', name: 'Books', icon: 'book' },
-    { id: 'clothing', name: 'Clothing', icon: 'shirt' },
-    { id: 'services', name: 'Services', icon: 'briefcase' },
-    { id: 'jobs', name: 'Jobs', icon: 'user-tie' },
-    { id: 'real_estate', name: 'Real Estate', icon: 'home' },
-    { id: 'other', name: 'Other', icon: 'more-horizontal' }
-  ];
-
-  res.json({
-    success: true,
-    data: {
-      categories
-    }
-  });
-}));
-
-// @route   GET /api/listings/search/suggestions
-// @desc    Get search suggestions
-// @access  Public
-router.get('/search/suggestions', asyncHandler(async (req, res) => {
-  const { q } = req.query;
-
-  if (!q || q.length < 2) {
-    return res.json({
-      success: true,
-      data: { suggestions: [] }
-    });
-  }
-
-  // Get popular search terms and categories
-  const suggestions = [
-    'iPhone', 'Samsung', 'Laptop', 'Bike', 'Car', 'Furniture', 'Books', 'Clothing',
-    'Electronics', 'Vehicles', 'Real Estate', 'Services', 'Jobs'
-  ].filter(item => item.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
-
-  res.json({
-    success: true,
-    data: {
-      suggestions
-    }
-  });
-}));
+// Note: /categories and /search/suggestions routes moved to top of file (before dynamic /:id route)
 
 // Utility function to calculate distance between two coordinates
 function calculateDistance(lat1, lon1, lat2, lon2) {

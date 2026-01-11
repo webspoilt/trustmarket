@@ -20,9 +20,9 @@ async function testSetup() {
 
   // Test 2: Cloudinary Configuration
   console.log('📸 Testing Media Storage...');
-  const isRealCloudinary = process.env.CLOUDINARY_CLOUD_NAME !== 'demo' && 
-                         process.env.CLOUDINARY_CLOUD_NAME && 
-                         process.env.CLOUDINARY_API_KEY !== 'demo';
+  const isRealCloudinary = process.env.CLOUDINARY_CLOUD_NAME !== 'demo' &&
+    process.env.CLOUDINARY_CLOUD_NAME &&
+    process.env.CLOUDINARY_API_KEY !== 'demo';
 
   if (isRealCloudinary) {
     console.log('✅ Media Storage: Using Cloudinary');
@@ -68,7 +68,12 @@ async function testSetup() {
 }
 
 // Run the test
-testSetup().catch(console.error);
+testSetup()
+  .catch(console.error)
+  .finally(() => {
+    mongoose.connection.close();
+    process.exit(0);
+  });
 
 // Export for use in other files
 module.exports = { testSetup };

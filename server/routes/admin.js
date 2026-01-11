@@ -195,7 +195,7 @@ router.get('/users', asyncHandler(async (req, res) => {
 
   // Build query
   const query = {};
-  
+
   if (search) {
     query.$or = [
       { firstName: new RegExp(search, 'i') },
@@ -204,16 +204,16 @@ router.get('/users', asyncHandler(async (req, res) => {
       { phone: new RegExp(search, 'i') }
     ];
   }
-  
+
   if (status) {
     if (status === 'active') query.isActive = true;
     if (status === 'banned') query.isBanned = true;
   }
-  
+
   if (trustLevel) {
     query['trustScore.level'] = trustLevel;
   }
-  
+
   if (verification === 'phone') {
     query['verification.phone.verified'] = true;
   } else if (verification === 'id') {
@@ -247,7 +247,7 @@ router.get('/users', asyncHandler(async (req, res) => {
 // @access  Private (Admin only)
 router.get('/users/:id', asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
-  
+
   if (!user) {
     return res.status(404).json({
       success: false,
@@ -263,11 +263,11 @@ router.get('/users/:id', asyncHandler(async (req, res) => {
   const userMessages = await Message.find({
     $or: [{ sender: user._id }, { receiver: user._id }]
   })
-  .sort({ createdAt: -1 })
-  .limit(100)
-  .populate('sender', 'firstName lastName')
-  .populate('receiver', 'firstName lastName')
-  .populate('listing', 'title');
+    .sort({ createdAt: -1 })
+    .limit(100)
+    .populate('sender', 'firstName lastName')
+    .populate('receiver', 'firstName lastName')
+    .populate('listing', 'title');
 
   const userReports = await Message.aggregate([
     { $unwind: '$reports' },
@@ -321,9 +321,9 @@ router.put('/users/:id/ban', [
   }
 
   const { ban, banReason } = req.body;
-  
+
   const user = await User.findById(req.params.id);
-  
+
   if (!user) {
     return res.status(404).json({
       success: false,
@@ -333,7 +333,7 @@ router.put('/users/:id/ban', [
 
   user.isBanned = ban;
   user.banReason = ban ? banReason || 'No reason provided' : '';
-  
+
   if (ban) {
     user.isActive = false;
   }
@@ -366,9 +366,9 @@ router.put('/users/:id/trust-score', [
   }
 
   const { points, reason } = req.body;
-  
+
   const user = await User.findById(req.params.id);
-  
+
   if (!user) {
     return res.status(404).json({
       success: false,
@@ -411,9 +411,9 @@ router.put('/users/:id/verify', [
   }
 
   const { status, notes } = req.body;
-  
+
   const user = await User.findById(req.params.id);
-  
+
   if (!user) {
     return res.status(404).json({
       success: false,
@@ -469,7 +469,7 @@ router.get('/listings', asyncHandler(async (req, res) => {
 
   // Build query
   const query = {};
-  
+
   if (status) query.status = status;
   if (category) query.category = category;
   if (search) {
@@ -519,10 +519,10 @@ router.put('/listings/:id/status', [
   }
 
   const { status, reason } = req.body;
-  
+
   const listing = await Listing.findById(req.params.id)
     .populate('seller', 'firstName lastName email');
-  
+
   if (!listing) {
     return res.status(404).json({
       success: false,
@@ -531,12 +531,12 @@ router.put('/listings/:id/status', [
   }
 
   listing.status = status;
-  
+
   // Add report if listing is flagged
   if (status === 'flagged') {
     listing.reports.push({
       reportedBy: req.user._id,
-      reason: 'admin_flagged',
+      reason: 'other',
       description: reason || 'Flagged by admin',
       status: 'resolved'
     });
@@ -784,7 +784,7 @@ router.put('/reports/:type/:id/resolve', [
 // @access  Private (Admin only)
 router.get('/analytics', asyncHandler(async (req, res) => {
   const { period = '30d' } = req.query;
-  
+
   let startDate = new Date();
   if (period === '7d') {
     startDate.setDate(startDate.getDate() - 7);

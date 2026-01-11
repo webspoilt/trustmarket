@@ -61,14 +61,14 @@ const PageSkeleton = () => (
 // Page preloader hook for intelligent prefetching
 const usePagePreloader = () => {
   const location = useLocation();
-  
+
   return useCallback((path) => {
     // Prefetch page chunks when user hovers over links
     const link = document.querySelector(`a[href="${path}"]`);
     if (link) {
       link.addEventListener('mouseenter', () => {
         // Trigger React Router's prefetching
-        const preloadLink = document.createLinkElement('link');
+        const preloadLink = document.createElement('link');
         preloadLink.rel = 'prefetch';
         preloadLink.href = path;
         document.head.appendChild(preloadLink);
@@ -81,9 +81,9 @@ const usePagePreloader = () => {
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
+    this.state = {
+      hasError: false,
+      error: null,
       errorInfo: null,
       retryCount: 0
     };
@@ -96,7 +96,7 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
     this.setState({ errorInfo });
-    
+
     // Report error to monitoring service
     if (process.env.NODE_ENV === 'production') {
       this.reportError(error, errorInfo);
@@ -123,11 +123,11 @@ class ErrorBoundary extends React.Component {
   };
 
   handleRetry = () => {
-    this.setState(prev => ({ 
-      hasError: false, 
-      error: null, 
+    this.setState(prev => ({
+      hasError: false,
+      error: null,
       errorInfo: null,
-      retryCount: prev.retryCount + 1 
+      retryCount: prev.retryCount + 1
     }));
   };
 
@@ -145,7 +145,7 @@ class ErrorBoundary extends React.Component {
             <p className="text-gray-600 mb-6">
               We're sorry, but an unexpected error occurred. Our team has been notified.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={this.handleRetry}
@@ -160,7 +160,7 @@ class ErrorBoundary extends React.Component {
                 Refresh Page
               </button>
             </div>
-            
+
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mt-6 p-4 bg-gray-100 rounded-lg text-left">
                 <p className="text-sm font-mono text-red-600">{this.state.error.toString()}</p>
@@ -235,7 +235,7 @@ const RoutePrefetcher = ({ children }) => {
 // Scroll to top component
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -255,7 +255,7 @@ const NetworkAwareSuspense = ({ children, fallback }) => {
         setWasOffline(false);
       }
     };
-    
+
     const handleOffline = () => {
       setIsOnline(false);
       setWasOffline(true);
@@ -345,7 +345,7 @@ function App() {
                           {/* Public Routes */}
                           <Route path="/login" element={<Login />} />
                           <Route path="/register" element={<Register />} />
-                          
+
                           {/* Main Application Routes */}
                           <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
@@ -360,11 +360,11 @@ function App() {
                           </Route>
 
                           {/* Mobile-optimized routes */}
-                          <Route 
-                            path="/create-listing" 
-                            element={<MobileLayout><CreateListing /></MobileLayout>} 
+                          <Route
+                            path="/create-listing"
+                            element={<MobileLayout><CreateListing /></MobileLayout>}
                           />
-                          
+
                           {/* 404 Route */}
                           <Route path="*" element={<NotFound />} />
                         </Routes>

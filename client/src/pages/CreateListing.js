@@ -28,7 +28,7 @@ const CreateListing = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
@@ -39,21 +39,24 @@ const CreateListing = () => {
               placeholder="Describe your product"
             ></textarea>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Category
             </label>
             <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-              <option>Electronics</option>
-              <option>Fashion</option>
-              <option>Home & Garden</option>
-              <option>Books</option>
-              <option>Sports</option>
-              <option>Other</option>
+              <option value="electronics">Electronics</option>
+              <option value="vehicles">Vehicles</option>
+              <option value="furniture">Furniture</option>
+              <option value="books">Books</option>
+              <option value="clothing">Clothing</option>
+              <option value="services">Services</option>
+              <option value="jobs">Jobs</option>
+              <option value="real_estate">Real Estate</option>
+              <option value="other">Other</option>
             </select>
           </div>
-          
+
           <div className="flex justify-end">
             <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
               Create Listing
