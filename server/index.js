@@ -28,8 +28,10 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      process.env.FRONTEND_URL || "http://localhost:3000",
-      process.env.CLIENT_URL || "http://localhost:3000"
+      "https://trustmarket-frontend.vercel.app",
+      process.env.FRONTEND_URL,
+      process.env.CLIENT_URL,
+      "http://localhost:3000"
     ].filter(Boolean),
     methods: ["GET", "POST"],
     credentials: true
