@@ -175,7 +175,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6
+    minlength: 8
   },
   phone: {
     type: String,
@@ -183,7 +183,8 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: function (v) {
-        return /^[6-9]\d{9}$/.test(v);
+        // Accept: 9876543210, +919876543210, 919876543210
+        return /^(\+91|91)?[6-9]\d{9}$/.test(v);
       },
       message: 'Please enter a valid Indian mobile number'
     }
