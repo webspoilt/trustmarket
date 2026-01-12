@@ -60,10 +60,13 @@ app.use(helmet({
 }));
 
 // CORS configuration
+// CORS configuration
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || "http://localhost:3000",
-    process.env.CLIENT_URL || "http://localhost:3000"
+    "https://trustmarket-frontend.vercel.app",
+    process.env.FRONTEND_URL,
+    process.env.CLIENT_URL,
+    "http://localhost:3000"
   ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
