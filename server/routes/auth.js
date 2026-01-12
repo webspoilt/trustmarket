@@ -14,9 +14,15 @@ router.post('/register', [
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain uppercase, lowercase, and number'),
-  body('phone').isMobilePhone('en-IN').withMessage('Valid Indian phone number is required'),
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
+    .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%*?&)'),
+  body('phone').custom((value) => {
+    // Accept: 9876543210, +919876543210, 919876543210
+    if (!/^(\+91|91)?[6-9]\d{9}$/.test(value)) {
+      throw new Error('Valid Indian phone number is required');
+    }
+    return true;
+  }),
   body('firstName').trim().isLength({ min: 2, max: 50 }).withMessage('First name must be 2-50 characters'),
   body('lastName').trim().isLength({ min: 2, max: 50 }).withMessage('Last name must be 2-50 characters')
 ], asyncHandler(async (req, res) => {
@@ -86,7 +92,12 @@ router.post('/register', [
 // @access  Public
 router.post('/login', [
   body('email').optional().isEmail().normalizeEmail().withMessage('Valid email is required'),
-  body('phone').optional().isMobilePhone('en-IN').withMessage('Valid Indian phone number is required'),
+  body('phone').optional().custom((value) => {
+    if (value && !/^(\+91|91)?[6-9]\d{9}$/.test(value)) {
+      throw new Error('Valid Indian phone number is required');
+    }
+    return true;
+  }),
   body('password').notEmpty().withMessage('Password is required'),
   body().custom((value, { req }) => {
     if (!req.body.email && !req.body.phone) {
@@ -412,8 +423,8 @@ router.post('/reset-password', [
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain uppercase, lowercase, and number')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
+    .withMessage('Password must contain uppercase, lowercase, number, and special character (@$!%*?&)')
 ], asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
