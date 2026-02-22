@@ -1,0 +1,63 @@
+import React from 'react';
+
+const Logo = ({ className = "h-10 w-10", text = false }) => {
+    return (
+        <div className="flex items-center space-x-2">
+            <svg
+                className={className}
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {/* Gradient Definitions */}
+                <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#4f46e5" />
+                        <stop offset="100%" stopColor="#9333ea" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                {/* Shield Shape */}
+                <path
+                    d="M50 5L10 20V45C10 70 50 95 50 95C50 95 90 70 90 45V20L50 5Z"
+                    fill="url(#logoGradient)"
+                    opacity="0.9"
+                />
+
+                {/* Glossy 3D Overlay */}
+                <path
+                    d="M50 5L10 20V45C10 50 11 55 13 60L75 10L50 5Z"
+                    fill="white"
+                    opacity="0.2"
+                />
+
+                {/* Inner 'T' — Trust */}
+                <path
+                    d="M35 35H65V42H53V70H47V42H35V35Z"
+                    fill="white"
+                    filter="url(#glow)"
+                />
+
+                {/* Connection Nodes — Market */}
+                <circle cx="50" cy="25" r="3" fill="white" />
+                <circle cx="25" cy="45" r="2" fill="white" opacity="0.7" />
+                <circle cx="75" cy="45" r="2" fill="white" opacity="0.7" />
+            </svg>
+
+            {text && (
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+                    TrustMarket
+                </span>
+            )}
+        </div>
+    );
+};
+
+export default Logo;

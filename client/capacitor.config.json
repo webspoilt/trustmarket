@@ -1,0 +1,20 @@
+{
+    "appId": "com.trustmarket.app",
+    "appName": "TrustMarket",
+    "webDir": "build",
+    "server": {
+        "androidScheme": "https"
+    },
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 2000,
+            "backgroundColor": "#4f46e5",
+            "androidScaleType": "CENTER_CROP",
+            "showSpinner": false
+        },
+        "StatusBar": {
+            "style": "Dark",
+            "backgroundColor": "#4f46e5"
+        }
+    }
+}

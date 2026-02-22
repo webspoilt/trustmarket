@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#3B82F6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="TrustMarket" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#3B82F6" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="description" content="TrustMarket - India's Safest P2P Marketplace with Video Verification and Trust Scoring" />
+    <meta name="keywords" content="P2P marketplace, India, video verification, trust scoring, safe trading, classifieds" />
+    <meta name="author" content="TrustMarket Team" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://trustmarket.com/" />
+    <meta property="og:title" content="TrustMarket - India's Safest P2P Marketplace" />
+    <meta property="og:description" content="Trade safely with video verification and trust scoring system. India's most trusted peer-to-peer marketplace." />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://trustmarket.com/" />
+    <meta property="twitter:title" content="TrustMarket - India's Safest P2P Marketplace" />
+    <meta property="twitter:description" content="Trade safely with video verification and trust scoring system. India's most trusted peer-to-peer marketplace." />
+    <meta property="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
+
+    <!-- PWA Configuration -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192.png" />
+    <link rel="apple-touch-icon-precomposed" href="%PUBLIC_URL%/icons/icon-192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    
+    <!-- Google Fonts - Inter with display swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Critical CSS for above-the-fold content -->
+    <style>
+      /* Reset and base styles */
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+      }
+      
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #F8FAFC;
+        color: #0F172A;
+        line-height: 1.5;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      
+      /* Safe area insets for notched devices */
+      @supports (padding: env(safe-area-inset-bottom)) {
+        body {
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+      }
+      
+      /* Loading spinner */
+      .app-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #F8FAFC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #E2E8F0;
+        border-top: 4px solid #3B82F6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        color: #64748B;
+        font-weight: 500;
+        font-size: 1rem;
+      }
+      
+      /* Progressive loading bars */
+      .progress-bar {
+        width: 200px;
+        height: 4px;
+        background: #E2E8F0;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      
+      .progress-bar-fill {
+        height: 100%;
+        background: #3B82F6;
+        border-radius: 2px;
+        animation: progress 1.5s ease-in-out infinite;
+      }
+      
+      @keyframes progress {
+        0% { width: 0%; margin-left: 0%; }
+        50% { width: 60%; margin-left: 20%; }
+        100% { width: 0%; margin-left: 100%; }
+      }
+      
+      /* Hide loading when React app loads */
+      .app-loaded .app-loading {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      
+      .app-loaded .app-loading > * {
+        display: none;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #F1F5F9;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #CBD5E1;
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94A3B8;
+      }
+      
+      /* Touch-friendly interactive elements */
+      button, a, input, select, textarea {
+        touch-action: manipulation;
+      }
+      
+      /* Prevent text selection on touch (except inputs) */
+      .no-select {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      
+      /* Responsive text sizes */
+      html {
+        font-size: 16px;
+      }
+      
+      @media (max-width: 640px) {
+        html {
+          font-size: 15px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        html {
+          font-size: 14px;
+        }
+      }
+      
+      /* Offline indicator styles */
+      .offline-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #F59E0B;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .offline-indicator.visible {
+        opacity: 1;
+      }
+      
+      .offline-indicator svg {
+        width: 18px;
+        height: 18px;
+      }
+      
+      /* Install prompt banner */
+      .install-prompt {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        color: white;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .install-prompt.visible {
+        transform: translateY(0);
+      }
+      
+      @supports (padding: env(safe-area-inset-bottom)) {
+        .install-prompt {
+          padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        }
+      }
+      
+      .install-prompt-content {
+        flex: 1;
+      }
+      
+      .install-prompt-title {
+        font-weight: 600;
+        font-size: 0.9375rem;
+        margin-bottom: 2px;
+      }
+      
+      .install-prompt-text {
+        font-size: 0.8125rem;
+        opacity: 0.9;
+      }
+      
+      .install-prompt-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      
+      .install-prompt-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        border: none;
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+      
+      .install-prompt-btn:active {
+        transform: scale(0.95);
+      }
+      
+      .install-prompt-btn-primary {
+        background: white;
+        color: #3B82F6;
+      }
+      
+      .install-prompt-btn-secondary {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      
+      @media (max-width: 480px) {
+        .install-prompt {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .install-prompt-actions {
+          justify-content: flex-end;
+        }
+      }
+    </style>
+    
+    <title>TrustMarket - India's Safest P2P Marketplace</title>
+  </head>
+  <body>
+    <noscript>
+      <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        font-family: 'Inter', sans-serif;
+      ">
+        <div>
+          <h1 style="color: #EF4444; margin-bottom: 1rem;">JavaScript Required</h1>
+          <p style="color: #64748B; font-size: 1.1rem; line-height: 1.6;">
+            TrustMarket requires JavaScript to function properly.<br />
+            Please enable JavaScript in your browser and refresh the page.
+          </p>
+        </div>
+      </div>
+    </noscript>
+    
+    <!-- App Loading Screen -->
+    <div class="app-loading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading TrustMarket...</p>
+      <div class="progress-bar">
+        <div class="progress-bar-fill"></div>
+      </div>
+    </div>
+    
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
+      </svg>
+      <span>You're offline. Some features may be limited.</span>
+    </div>
+    
+    <!-- Install Prompt Banner -->
+    <div class="install-prompt" id="install-prompt">
+      <div class="install-prompt-content">
+        <div class="install-prompt-title">Install TrustMarket</div>
+        <div class="install-prompt-text">Get the full app experience</div>
+      </div>
+      <div class="install-prompt-actions">
+        <button class="install-prompt-btn install-prompt-btn-secondary" id="install-dismiss">Later</button>
+        <button class="install-prompt-btn install-prompt-btn-primary" id="install-accept">Install</button>
+      </div>
+    </div>
+    
+    <!-- React App Root -->
+    <div id="root"></div>
+    
+    <!-- PWA Registration and Offline Detection -->
+    <script>
+      (function() {
+        'use strict';
+        
+        // Offline indicator management
+        function updateOfflineIndicator() {
+          const indicator = document.getElementById('offline-indicator');
+          if (indicator) {
+            if (navigator.onLine) {
+              indicator.classList.remove('visible');
+            } else {
+              indicator.classList.add('visible');
+              setTimeout(() => {
+                indicator.classList.remove('visible');
+              }, 5000);
+            }
+          }
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', updateOfflineIndicator);
+        window.addEventListener('offline', updateOfflineIndicator);
+        updateOfflineIndicator();
+        
+        // Service Worker Registration with update handling
+        if ('serviceWorker' in navigator) {
+          let registration = null;
+          
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(reg) {
+              registration = reg;
+              console.log('SW registered:', reg);
+              
+              // Check for updates
+              reg.addEventListener('updatefound', function() {
+                const newWorker = reg.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', function() {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      // New content available
+                      if (confirm('A new version of TrustMarket is available. Refresh to update?')) {
+                        window.location.reload();
+                      }
+                    }
+                  });
+                }
+              });
+            })
+            .catch(function(error) {
+              console.log('SW registration failed:', error);
+            });
+          
+          // Handle messages from service worker
+          navigator.serviceWorker.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'SYNC_COMPLETE') {
+              // Show notification when background sync completes
+              if (window.showToast) {
+                window.showToast(event.data.message, 'success');
+              }
+            }
+          });
+        }
+        
+        // Hide loading screen when ready
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            document.body.classList.add('app-loaded');
+          }, 500);
+        });
+        
+        // PWA install prompt handling
+        let deferredPrompt = null;
+        let installPromptShown = false;
+        const installPrompt = document.getElementById('install-prompt');
+        const installAccept = document.getElementById('install-accept');
+        const installDismiss = document.getElementById('install-dismiss');
+        
+        window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          deferredPrompt = e;
+          
+          // Show prompt after user interacts with the app twice
+          let interactionCount = 0;
+          const checkAndShowPrompt = function() {
+            interactionCount++;
+            if (interactionCount >= 2 && deferredPrompt && !installPromptShown) {
+              installPrompt.classList.add('visible');
+              installPromptShown = true;
+            }
+          };
+          
+          ['click', 'scroll', 'touchstart', 'keydown'].forEach(function(event) {
+            window.addEventListener(event, checkAndShowPrompt, { once: true });
+          });
+        });
+        
+        if (installAccept) {
+          installAccept.addEventListener('click', async function() {
+            if (deferredPrompt) {
+              deferredPrompt.prompt();
+              const choiceResult = await deferredPrompt.userChoice;
+              
+              if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+              }
+              
+              deferredPrompt = null;
+            }
+            installPrompt.classList.remove('visible');
+          });
+        }
+        
+        if (installDismiss) {
+          installDismiss.addEventListener('click', function() {
+            installPrompt.classList.remove('visible');
+            // Don't show again this session
+            deferredPrompt = null;
+          });
+        }
+        
+        // Handle successful app installation
+        window.addEventListener('appinstalled', function(evt) {
+          console.log('PWA was installed');
+          installPrompt.classList.remove('visible');
+          
+          // Show success notification
+          const notification = document.createElement('div');
+          notification.innerHTML = '<div style="position: fixed; top: 20px; right: 20px; background: #10B981; color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); z-index: 10000; font-weight: 500; display: flex; align-items: center; gap: 8px;"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>TrustMarket app installed successfully!</div>';
+          document.body.appendChild(notification);
+          
+          setTimeout(function() {
+            document.body.removeChild(notification);
+          }, 4000);
+        });
+      })();
+    </script>
+  </body>
+</html>

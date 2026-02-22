@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TrustMarket</string>
+    <string name="title_activity_main">TrustMarket</string>
+    <string name="package_name">com.trustmarket.app</string>
+    <string name="custom_url_scheme">com.trustmarket.app</string>
+</resources>

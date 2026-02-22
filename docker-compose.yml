@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  server:
+    build: .
+    ports:
+      - '5000:5000'
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/trustmarket
+      - JWT_SECRET=${JWT_SECRET:-trustmarket-super-secret-jwt-key-2025}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-trustmarket-super-secret-refresh-key-2025}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - CLIENT_URL=${CLIENT_URL:-http://localhost:3000}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trustmarket-net
+
+  mongo:
+    image: mongo:7
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: [ 'CMD', 'mongosh', '--eval', "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - trustmarket-net
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trustmarket-net
+    profiles:
+      - dev # Only starts with `docker compose --profile dev up`
+
+volumes:
+  mongo-data:
+
+
+networks:
+  trustmarket-net:
+    driver: bridge

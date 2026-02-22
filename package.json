@@ -1,0 +1,20 @@
+{
+  "name": "trustmarket",
+  "version": "1.0.0",
+  "description": "TrustMarket - India's Safest P2P Marketplace",
+  "scripts": {
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "npm run install:server && npm run install:client",
+    "start": "cd server && npm start",
+    "dev": "cd server && npm run dev",
+    "build:client": "cd client && npm run build",
+    "heroku-postbuild": "npm run install:server"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["marketplace", "p2p", "trust", "india"],
+  "author": "",
+  "license": "ISC"
+}
