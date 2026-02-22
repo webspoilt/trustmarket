@@ -167,23 +167,27 @@ const Register = () => {
   };
 
   const tabClass = (tab) =>
-    `flex-1 py-2.5 text-sm font-medium rounded-md transition-all ${activeTab === tab
-      ? 'bg-blue-600 text-white shadow-sm'
-      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+    `flex-1 py-3 text-sm font-bold rounded-lg transition-all ${activeTab === tab
+      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
+      : 'text-slate-400 hover:text-white hover:bg-slate-800'
     }`;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-6">
-        <div className="mb-8">
-          <Link to="/" className="flex justify-center mb-6 hover:scale-105 transition-transform duration-300">
-            <Logo className="w-16 h-16" text={false} />
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl -z-10 mix-blend-screen pointer-events-none"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-500/20 rounded-full blur-3xl -z-10 mix-blend-screen pointer-events-none"></div>
+
+      <div className="max-w-md w-full glass-dark border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative z-10 space-y-8">
+        <div className="mb-2">
+          <Link to="/" className="flex justify-center mb-6 hover:scale-110 transition-transform duration-300">
+            <Logo className="w-20 h-20" text={false} />
           </Link>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="text-center text-3xl font-extrabold text-white tracking-tight">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Join India's safest P2P marketplace
+          <p className="mt-3 text-center text-sm text-slate-400 font-medium">
+            Join India's safest <span className="text-indigo-400">P2P marketplace</span>
           </p>
         </div>
 
@@ -195,9 +199,9 @@ const Register = () => {
         {!process.env.REACT_APP_GOOGLE_CLIENT_ID && (
           <button
             disabled
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-slate-600 rounded-xl shadow-sm bg-slate-800/50 text-sm font-medium text-slate-400 cursor-not-allowed"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 opacity-70" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -210,15 +214,15 @@ const Register = () => {
         {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
+            <div className="w-full border-t border-slate-700"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-gray-50 text-gray-500">or register with</span>
+            <span className="px-4 bg-slate-900 text-slate-400 font-medium">or register with</span>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex bg-gray-100 rounded-lg p-1 gap-1">
+        <div className="flex bg-slate-900 border border-slate-700/50 rounded-xl p-1.5 gap-1 shadow-inner">
           <button onClick={() => { setActiveTab('email'); setError(''); }} className={tabClass('email')}>
             Email & Password
           </button>
@@ -228,57 +232,57 @@ const Register = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm" role="alert">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg relative text-sm font-medium" role="alert">
             {error}
           </div>
         )}
 
         {/* Email/Password Registration */}
         {activeTab === 'email' && (
-          <form onSubmit={handleEmailRegister} className="space-y-4">
+          <form onSubmit={handleEmailRegister} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
+                <label htmlFor="firstName" className="block text-sm font-medium text-slate-300">First Name</label>
                 <input id="firstName" name="firstName" type="text" required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                   placeholder="First name" value={formData.firstName} onChange={handleChange} />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+                <label htmlFor="lastName" className="block text-sm font-medium text-slate-300">Last Name</label>
                 <input id="lastName" name="lastName" type="text" required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                   placeholder="Last name" value={formData.lastName} onChange={handleChange} />
               </div>
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300">Email Address</label>
               <input id="email" name="email" type="email" required autoComplete="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                 placeholder="you@example.com" value={formData.email} onChange={handleChange} />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone (optional)</label>
-              <div className="mt-1 flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">+91</span>
+              <label htmlFor="phone" className="block text-sm font-medium text-slate-300">Phone (optional)</label>
+              <div className="mt-1 flex rounded-xl shadow-sm">
+                <span className="inline-flex items-center px-4 text-sm text-slate-400 bg-slate-800 border border-r-0 border-slate-600 rounded-l-xl font-bold">+91</span>
                 <input id="phone" name="phone" type="tel" maxLength={10}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-r-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-r-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                   placeholder="10-digit number" value={formData.phone} onChange={handleChange} />
               </div>
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300">Password</label>
               <input id="password" name="password" type="password" required minLength={8} autoComplete="new-password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                 placeholder="Min 8 chars, upper, lower & number" value={formData.password} onChange={handleChange} />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300">Confirm Password</label>
               <input id="confirmPassword" name="confirmPassword" type="password" required autoComplete="new-password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                 placeholder="Confirm password" value={formData.confirmPassword} onChange={handleChange} />
             </div>
             <button type="submit" disabled={isSubmitting}
-              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-500/30 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 disabled:opacity-50 transition-all hover:-translate-y-0.5"
             >
               {isSubmitting ? 'Creating Account...' : 'Create Account'}
             </button>
@@ -287,66 +291,66 @@ const Register = () => {
 
         {/* Phone/OTP Registration */}
         {activeTab === 'phone' && (
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
+          <form onSubmit={handleVerifyOtp} className="space-y-5">
             <div>
-              <label htmlFor="reg-phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-              <div className="mt-1 flex">
-                <span className="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">+91</span>
+              <label htmlFor="reg-phone" className="block text-sm font-medium text-slate-300">Phone Number</label>
+              <div className="mt-1 flex rounded-xl shadow-sm">
+                <span className="inline-flex items-center px-4 text-sm text-slate-400 bg-slate-800 border border-r-0 border-slate-600 rounded-l-xl font-bold">+91</span>
                 <input id="reg-phone" type="tel" required maxLength={10}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-r-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-r-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
                   placeholder="10-digit mobile number"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
                   disabled={otpSent}
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-500">We'll create your account and verify your number</p>
+              <p className="mt-2 text-xs text-slate-500 font-medium">We'll create your account and verify your number</p>
             </div>
 
             {!otpSent ? (
               <button type="button" onClick={handleSendOtp} disabled={isSubmitting}
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-500/30 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 disabled:opacity-50 transition-all hover:-translate-y-0.5"
               >
-                {isSubmitting ? 'Sending...' : 'Send OTP'}
+                {isSubmitting ? 'Sending SMS...' : 'Send Magic Link / OTP'}
               </button>
             ) : (
               <>
-                <div>
-                  <label htmlFor="reg-otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
+                <div className="animate-fade-in-up">
+                  <label htmlFor="reg-otp" className="block text-sm font-medium text-slate-300">Enter Verification Code</label>
                   <input id="reg-otp" type="text" required maxLength={6}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-center tracking-[0.5em] text-lg font-mono"
-                    placeholder="● ● ● ● ● ●"
+                    className="mt-1 block w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-lg text-center tracking-[1em] font-mono shadow-inner"
+                    placeholder="------"
                     value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))} autoFocus
                   />
-                  <div className="mt-2 flex justify-between items-center text-xs text-gray-500">
-                    <span>OTP sent to +91 {formData.phone}</span>
+                  <div className="mt-3 flex justify-between items-center text-xs text-slate-400 font-medium">
+                    <span>Sent to +91 {formData.phone}</span>
                     {otpTimer > 0 ? (
-                      <span>Resend in {otpTimer}s</span>
+                      <span className="text-indigo-400">Resend in {otpTimer}s</span>
                     ) : (
-                      <button type="button" onClick={handleSendOtp} className="text-blue-600 hover:underline font-medium">Resend OTP</button>
+                      <button type="button" onClick={handleSendOtp} className="text-indigo-400 hover:text-indigo-300 transition-colors">Resend Code</button>
                     )}
                   </div>
                 </div>
                 <button type="submit" disabled={isSubmitting || otp.length < 6}
-                  className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                  className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-500/30 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 disabled:opacity-50 transition-all hover:-translate-y-0.5"
                 >
                   {isSubmitting ? 'Verifying...' : 'Verify & Create Account'}
                 </button>
                 <button type="button"
                   onClick={() => { setOtpSent(false); setOtp(''); setOtpTimer(0); }}
-                  className="w-full text-sm text-gray-500 hover:text-gray-700"
+                  className="w-full text-sm font-medium text-slate-400 hover:text-slate-300 transition-colors"
                 >
-                  ← Change phone number
+                  ← Change number
                 </button>
               </>
             )}
           </form>
         )}
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
+        <div className="text-center pt-2">
+          <p className="text-sm font-medium text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link to="/login" className="text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">
               Sign in
             </Link>
           </p>

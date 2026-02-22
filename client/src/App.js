@@ -30,10 +30,10 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Enhanced Loading Component with skeleton
 const LoadingFallback = () => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div className="text-center">
+  <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+    <div className="glass-dark border border-slate-700/50 rounded-2xl p-8 shadow-2xl flex flex-col items-center justify-center animate-fade-in-up">
       <LoadingSpinner size="large" />
-      <p className="mt-4 text-gray-500 text-sm font-medium">Loading...</p>
+      <p className="mt-6 text-slate-300 font-semibold tracking-wide animate-pulse">Loading Experience...</p>
     </div>
   </div>
 );
@@ -43,14 +43,14 @@ const LoadingFallback = () => (
 const PageSkeleton = () => (
   <div className="animate-pulse">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
+      <div className="h-8 bg-slate-800 rounded-xl w-1/3 mb-8"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="h-48 bg-gray-200"></div>
-            <div className="p-4">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div key={i} className="glass-dark border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
+            <div className="h-48 bg-slate-800/50"></div>
+            <div className="p-6">
+              <div className="h-4 bg-slate-800 rounded-lg w-3/4 mb-4"></div>
+              <div className="h-4 bg-slate-800 rounded-lg w-1/2"></div>
             </div>
           </div>
         ))}
@@ -134,28 +134,28 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-          <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+          <div className="max-w-md w-full glass-dark border border-red-500/20 rounded-2xl shadow-2xl p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-6 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Something went wrong</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-2xl font-bold text-white mb-2">Something went wrong</h2>
+            <p className="text-slate-400 mb-8 leading-relaxed">
               We're sorry, but an unexpected error occurred. Our team has been notified.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all font-bold shadow-lg shadow-indigo-500/30 hover:scale-105"
               >
                 Try Again
               </button>
               <button
                 onClick={() => window.location.reload()}
-                className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                className="bg-slate-800 border border-slate-600 text-slate-300 px-6 py-3 rounded-xl hover:bg-slate-700 transition-all font-bold hover:text-white"
               >
                 Refresh Page
               </button>
@@ -339,7 +339,7 @@ function App() {
               <AuthProvider>
                 <NotificationProvider>
                   <SocketProvider>
-                    <div className="App min-h-screen bg-gray-50">
+                    <div className="App min-h-screen bg-slate-900 text-slate-300 font-sans selection:bg-indigo-500/30">
                       <NetworkAwareSuspense fallback={<LoadingFallback />}>
                         <Routes>
                           {/* Public Routes */}
