@@ -2,7 +2,7 @@
 node_modules/
 
 # Build output
-client/build/
+# (client/build/ removed so Docker can copy the output)
 
 # Environment
 .env

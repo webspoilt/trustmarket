@@ -11,12 +11,12 @@ COPY package*.json ./
 # Install server dependencies
 RUN cd server && npm ci --only=production
 
-# Install client dependencies and build
-RUN cd client && npm ci && npm run build
-
-# Copy source code
+# Copy server source code
 COPY server/ ./server/
-COPY client/build/ ./server/public/
+
+# Copy client source code and build it
+COPY client/ ./client/
+RUN cd client && npm ci && npm run build
 
 # ─── Production stage ───
 FROM node:20-alpine
@@ -25,7 +25,7 @@ WORKDIR /app
 
 # Add non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S trustmarket -u 1001 -G nodejs
+  adduser -S trustmarket -u 1001 -G nodejs
 
 # Copy built artifacts
 COPY --from=builder /app/server/ ./
