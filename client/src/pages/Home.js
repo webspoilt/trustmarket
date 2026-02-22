@@ -17,9 +17,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-900 text-slate-300">
       {/* ═══ HERO SECTION ═══ */}
-      <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900">
+      <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-900 via-indigo-950/80 to-slate-900">
 
         {/* 3D Globe Background */}
         <Suspense fallback={null}>
@@ -126,14 +126,14 @@ const Home = () => {
             <Link
               key={cat.name}
               to={`/search?category=${cat.name.toLowerCase()}`}
-              className="card-neu text-center cursor-pointer group"
+              className="glass-dark rounded-2xl p-6 text-center cursor-pointer group hover:-translate-y-1 transition-all duration-300 border border-slate-700/50 hover:border-indigo-500/50 shadow-xl shadow-black/20"
             >
               <div
                 className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr ${cat.color} text-white text-3xl mb-3 group-hover:scale-110 transition-transform duration-300 shadow-md`}
               >
                 {cat.emoji}
               </div>
-              <h3 className="font-semibold text-slate-700">{cat.name}</h3>
+              <h3 className="font-semibold text-slate-200">{cat.name}</h3>
             </Link>
           ))}
         </div>
@@ -141,14 +141,14 @@ const Home = () => {
 
       {/* ═══ WHY TRUSTMARKET ═══ */}
       <div className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-xl"></div>
+        <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-3xl"></div>
 
         <div className="relative max-w-7xl mx-auto px-4">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">
               Why Choose TrustMarket?
             </h2>
-            <p className="mt-3 text-slate-600 max-w-lg mx-auto">
+            <p className="mt-3 text-slate-400 max-w-lg mx-auto">
               Features designed for your safety and trust.
             </p>
           </div>
@@ -191,15 +191,15 @@ const Home = () => {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="glass rounded-2xl p-6 hover:scale-[1.03] transition-transform duration-300"
+                className="glass-dark border border-slate-700/50 rounded-2xl p-6 hover:scale-[1.03] transition-transform duration-300 shadow-xl shadow-black/20"
               >
-                <div className={`inline-flex p-3 rounded-xl ${feature.bg} ${feature.color} mb-4`}>
+                <div className={`inline-flex p-3 rounded-xl ${feature.bg.replace('50', '900/40')} ${feature.color.replace('500', '400')} border border-${feature.color.split('-')[1]}-500/20 mb-4`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">
+                <h3 className="text-lg font-bold text-slate-100 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-slate-400 text-sm leading-relaxed">
                   {feature.desc}
                 </p>
               </div>
@@ -215,13 +215,13 @@ const Home = () => {
             { value: '50K+', label: 'Active Users', color: 'text-indigo-600' },
             { value: '99.9%', label: 'Uptime', color: 'text-green-600' },
             { value: '10K+', label: 'Verified Sellers', color: 'text-purple-600' },
-            { value: '0', label: 'Security Breaches', color: 'text-cyan-600' },
+            { value: '0', label: 'Security Breaches', color: 'text-cyan-400' },
           ].map((stat, i) => (
-            <div key={i} className="glass-card p-6">
-              <div className={`text-3xl sm:text-4xl font-extrabold ${stat.color} mb-1`}>
+            <div key={i} className="glass-dark border border-slate-700/50 rounded-2xl p-6 shadow-xl shadow-black/20">
+              <div className={`text-3xl sm:text-4xl font-extrabold ${stat.color} mb-1 drop-shadow-lg`}>
                 {stat.value}
               </div>
-              <div className="text-slate-500 text-sm font-medium">{stat.label}</div>
+              <div className="text-slate-400 text-sm font-medium">{stat.label}</div>
             </div>
           ))}
         </div>
