@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../components/common/Logo';
 
 // Lazy load the 3D globe (heavy dependency)
 const SecureGlobe = React.lazy(() => import('../components/visual/SecureGlobe'));
@@ -36,10 +37,15 @@ const Home = () => {
             <span className="mr-2">🛡️</span> Quantum Resistant Encryption Active
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-4 tracking-tight animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            Trust<span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Market</span>
-            <span className="text-indigo-400 text-3xl sm:text-4xl lg:text-5xl ml-2 font-light">3.0</span>
-          </h1>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shadow-2xl rounded-2xl md:-mt-3 shadow-indigo-500/20 bg-slate-900/50 p-2 backdrop-blur-sm border border-slate-700/50">
+              <Logo />
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight">
+              Trust<span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Market</span>
+              <span className="text-indigo-400 text-3xl sm:text-4xl lg:text-5xl ml-2 font-light">3.0</span>
+            </h1>
+          </div>
 
           <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             India's most secure P2P marketplace. Protected by Argon2id cryptography, behavioral analysis, and real-time anomaly detection.
@@ -97,7 +103,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="mt-12 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <div className="mt-12 pb-16 relative z-30 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
             <Link
               to="/register"
               className="inline-block px-8 py-4 bg-indigo-600 text-white font-bold rounded-full text-lg hover:bg-indigo-700 transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105"
@@ -109,7 +115,7 @@ const Home = () => {
       </div>
 
       {/* ═══ CATEGORIES SECTION ═══ */}
-      <div className="max-w-7xl mx-auto px-4 -mt-12 relative z-20 pb-16">
+      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-20 pb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
           {[
             { name: 'Electronics', emoji: '📱', color: 'from-blue-500 to-cyan-400' },
