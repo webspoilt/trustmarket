@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiService } from '../../services/api';
+import Logo from '../../components/common/Logo';
 
 const Login = () => {
   const [activeTab, setActiveTab] = useState('email'); // 'email' | 'phone'
@@ -145,8 +146,11 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-6">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+        <div className="mb-8">
+          <Link to="/" className="flex justify-center mb-6 hover:scale-105 transition-transform duration-300">
+            <Logo className="w-16 h-16" text={false} />
+          </Link>
+          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
