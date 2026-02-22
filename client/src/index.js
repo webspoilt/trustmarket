@@ -15,6 +15,11 @@ root.render(
   </React.StrictMode>
 );
 
+// Remove the hardcoded loading overlay safely after React mounts
+setTimeout(() => {
+  document.body.classList.add('app-loaded');
+}, 100);
+
 // Performance monitoring (reportWebVitals removed)
 
 // Handle online/offline status with app-wide event dispatching
