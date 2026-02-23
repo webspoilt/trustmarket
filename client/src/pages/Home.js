@@ -38,9 +38,6 @@ const Home = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shadow-2xl rounded-2xl md:-mt-3 shadow-indigo-500/20 bg-slate-900/50 p-2 backdrop-blur-sm border border-slate-700/50">
-              <Logo />
-            </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight">
               Trust<span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Market</span>
               <span className="text-indigo-400 text-3xl sm:text-4xl lg:text-5xl ml-2 font-light">3.0</span>
@@ -60,7 +57,7 @@ const Home = () => {
               <input
                 type="text"
                 placeholder="Search for electronics, vehicles, fashion..."
-                className="flex-1 bg-transparent text-white placeholder-slate-400 py-3 px-2 outline-none text-sm sm:text-base"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-slate-400 py-3 px-2 outline-none text-sm sm:text-base"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
